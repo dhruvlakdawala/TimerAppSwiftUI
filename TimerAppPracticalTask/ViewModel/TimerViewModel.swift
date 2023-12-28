@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UserNotifications
 
 class TimerViewModel: ObservableObject {
     
@@ -31,6 +32,7 @@ class TimerViewModel: ObservableObject {
                 guard let self = self else { return }
                 if self.elapsedTime <= 0.0 {
                     self.stop()
+                    print("Timmer Finished")
                     self.gettingNotification() //Notification getting while timer is ended and app is in background mode
                 } else {
                     self.elapsedTime -= 0.01
@@ -65,14 +67,20 @@ class TimerViewModel: ObservableObject {
     
     //Notification
     func gettingNotification() {
+        print("Notification clicked")
         let content = UNMutableNotificationContent()
         content.title = "Message:"
         content.body = "Timer is finished........."
+        content.sound = UNNotificationSound.default
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
 
-        let request = UNNotificationRequest(identifier: "timerEnded", content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        UNUserNotificationCenter.current().add(request){ error in
+            if let err = error {
+                print("Notification Error: \(err)")
+            }
+        }
     }
 }

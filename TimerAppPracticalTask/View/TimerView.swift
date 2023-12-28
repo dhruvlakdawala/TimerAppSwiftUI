@@ -52,6 +52,16 @@ struct TimerView: View {
                         .background(Color.red)
                         .cornerRadius(10)
                 }
+                
+                Button(action: {
+                    timerVM.gettingNotification()
+                }) {
+                    Text("Notification")
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.purple)
+                        .cornerRadius(10)
+                }
             }
         }
         .onAppear(perform: {
